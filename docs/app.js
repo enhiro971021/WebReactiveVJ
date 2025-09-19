@@ -11,6 +11,30 @@ const videoEl = document.getElementById("camera");
 const startBtn = document.getElementById("start-btn");
 const statusText = document.getElementById("status-text");
 const showVideoToggle = document.getElementById("show-video");
+let renderer = null;
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const width = Math.max(1, Math.round(rect.width * dpr));
+  const height = Math.max(1, Math.round(rect.height * dpr));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+    if (renderer) {
+      renderer.resize(width, height);
+    }
+  }
+}
+
+function updateViewportHeight() {
+  const viewport = window.visualViewport;
+  const height = viewport ? viewport.height : window.innerHeight;
+  if (height > 0) {
+    document.documentElement.style.setProperty("--app-height", `${height}px`);
+  }
+}
 
 const CONFIG = {
   fftSize: 2048,
@@ -804,9 +828,16 @@ class Renderer {
     this.scene = new CoolMonoScene();
     this.paletteController = new PaletteController();
     this.previousFrame = document.createElement("canvas");
-    this.previousFrame.width = ctx.canvas.width;
-    this.previousFrame.height = ctx.canvas.height;
+    this.resize(ctx.canvas.width, ctx.canvas.height);
     this.prevCtx = this.previousFrame.getContext("2d");
+  }
+
+  resize(width, height) {
+    if (this.previousFrame.width !== width || this.previousFrame.height !== height) {
+      this.previousFrame.width = width;
+      this.previousFrame.height = height;
+      this.prevCtx = this.previousFrame.getContext("2d");
+    }
   }
 
   draw(shared) {
@@ -901,7 +932,27 @@ const audioAnalyser = new AudioAnalyser();
 const poseTracker = new PoseTracker();
 const handTracker = new HandGestureTracker();
 const faceTracker = new FaceExpressionTracker();
-const renderer = new Renderer(ctx, videoEl);
+renderer = new Renderer(ctx, videoEl);
+const handleResize = () => {
+  updateViewportHeight();
+  resizeCanvas();
+};
+
+handleResize();
+
+window.addEventListener("resize", handleResize);
+window.addEventListener("orientationchange", () => {
+  setTimeout(handleResize, 120);
+});
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", handleResize);
+}
+
+if ("ResizeObserver" in window) {
+  const observer = new ResizeObserver(handleResize);
+  observer.observe(canvas.parentElement);
+}
 
 const MODEL_CANDIDATES = {
   pose: [
@@ -1000,6 +1051,8 @@ async function startExperience() {
   statusText.textContent = "初期化中...";
 
   try {
+    updateViewportHeight();
+    resizeCanvas();
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: {
