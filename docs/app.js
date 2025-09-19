@@ -12,18 +12,36 @@ const startBtn = document.getElementById("start-btn");
 const statusText = document.getElementById("status-text");
 const showVideoToggle = document.getElementById("show-video");
 let renderer = null;
+const BASE_ASPECT_RATIO = canvas.width / canvas.height;
 
 function resizeCanvas() {
   const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  const width = Math.max(1, Math.round(rect.width * dpr));
-  const height = Math.max(1, Math.round(rect.height * dpr));
+  const container = canvas.parentElement;
+  const containerWidth = container.clientWidth || window.innerWidth;
+  const containerHeight = container.clientHeight || window.innerHeight;
+  const containerRatio = containerWidth / Math.max(containerHeight, 1);
 
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
+  let displayWidth;
+  let displayHeight;
+  if (containerRatio > BASE_ASPECT_RATIO) {
+    displayWidth = containerWidth;
+    displayHeight = displayWidth / BASE_ASPECT_RATIO;
+  } else {
+    displayHeight = containerHeight;
+    displayWidth = displayHeight * BASE_ASPECT_RATIO;
+  }
+
+  canvas.style.width = `${displayWidth}px`;
+  canvas.style.height = `${displayHeight}px`;
+
+  const targetWidth = Math.max(1, Math.round(displayWidth * dpr));
+  const targetHeight = Math.max(1, Math.round(displayHeight * dpr));
+
+  if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
     if (renderer) {
-      renderer.resize(width, height);
+      renderer.resize(targetWidth, targetHeight);
     }
   }
 }
