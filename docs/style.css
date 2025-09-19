@@ -1,0 +1,144 @@
+:root {
+  color-scheme: dark;
+  --bg: #04070f;
+  --fg: #e9edf5;
+  --accent: #50d4ff;
+  --accent-strong: #ff5fb7;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app {
+  position: relative;
+  width: min(100vw, 1280px);
+  height: min(100vh, 720px);
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  background: radial-gradient(circle, rgba(40, 60, 110, 0.6), rgba(4, 7, 15, 1));
+}
+
+#vj-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#camera {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+#camera.visible {
+  opacity: 1;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 65%);
+}
+
+.overlay h1 {
+  font-size: 1.8rem;
+  margin: 0 0 0.4rem;
+}
+
+.overlay p {
+  max-width: 600px;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #021420;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(80, 212, 255, 0.25);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-strong);
+}
+
+.status {
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: rgba(233, 237, 245, 0.78);
+}
+
+@media (max-width: 768px) {
+  .app {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  #camera {
+    width: 33vw;
+  }
+
+  .overlay {
+    padding: 16px;
+  }
+
+}

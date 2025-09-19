@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Reactive VJ</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <canvas id="vj-canvas" width="1280" height="720"></canvas>
+      <video id="camera" playsinline muted></video>
+      <section class="overlay">
+        <h1>Web Reactive VJ</h1>
+        <p>
+          マイクとカメラのアクセスを許可すると、音と動きに連動したビジュアルが再生されます。
+        </p>
+        <div class="controls">
+          <button id="start-btn">Start</button>
+          <label class="toggle">
+            <input type="checkbox" id="show-video" />
+            <span>Show Camera Preview</span>
+          </label>
+        </div>
+        <p class="status" id="status-text">Ready.</p>
+      </section>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
