@@ -24,8 +24,8 @@ body {
 
 .app {
   position: relative;
-  width: min(100vw, 1280px);
-  height: min(100vh, 720px);
+  width: min(100vw, calc(100vh * (16 / 9)), 1280px);
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
@@ -128,17 +128,15 @@ button:disabled {
 
 @media (max-width: 768px) {
   .app {
-    width: 100vw;
-    height: 100vh;
+    width: min(100vw, calc(100vh * (16 / 9)));
     border-radius: 0;
   }
 
   #camera {
-    width: 33vw;
+    width: min(33vw, 200px);
   }
 
   .overlay {
     padding: 16px;
   }
-
 }
