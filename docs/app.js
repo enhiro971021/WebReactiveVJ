@@ -710,18 +710,21 @@ class CoolMonoScene {
     ctx.scale(scale, scale);
     ctx.rotate(((face?.headTilt?.roll) ?? 0) * 0.6 + intensity * 0.08);
 
-    const gridSize = Math.max(24, 60 - intensity * 36 - audio.bandEnergy.low * 26);
-    ctx.strokeStyle = `hsla(${palette.baseHue}, 18%, 80%, ${0.05 + intensity * 0.28 + audio.bandEnergy.mid * 0.23})`;
-    for (let x = -width; x <= width; x += gridSize) {
+    const gridDensity = clamp(intensity * 0.55 + audio.bandEnergy.low * 0.45, 0, 1);
+    const gridSize = Math.max(72, 190 - gridDensity * 120);
+    ctx.strokeStyle = `hsla(${palette.baseHue}, 18%, 78%, ${0.04 + intensity * 0.22 + audio.bandEnergy.mid * 0.18})`;
+    const xLimit = width * 1.2;
+    const yLimit = height * 1.2;
+    for (let x = -xLimit; x <= xLimit; x += gridSize) {
       ctx.beginPath();
-      ctx.moveTo(x, -height);
-      ctx.lineTo(x + gestures.panX * 70, height);
+      ctx.moveTo(x, -yLimit);
+      ctx.lineTo(x + gestures.panX * 90, yLimit);
       ctx.stroke();
     }
-    for (let y = -height; y <= height; y += gridSize) {
+    for (let y = -yLimit; y <= yLimit; y += gridSize) {
       ctx.beginPath();
-      ctx.moveTo(-width, y);
-      ctx.lineTo(width, y + gestures.panY * 70);
+      ctx.moveTo(-xLimit, y);
+      ctx.lineTo(xLimit, y + gestures.panY * 90);
       ctx.stroke();
     }
     ctx.restore();
